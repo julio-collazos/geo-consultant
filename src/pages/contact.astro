@@ -1,0 +1,104 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro'
+import PageHeader from '@components/PageHeader.astro'
+import { Form, Input, Button, Textarea, Heading, Link } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+---
+
+<DefaultLayout title="Contact" description="Get in touch with Julio Collazos — geospatial analyst and environmental data practitioner.">
+  <PageHeader
+    title="Contact"
+    subtitle="Have a question, a project idea, or just want to connect? I'm happy to hear from you."
+    bgType="gradient"
+  />
+  <section class="my-16">
+    <div class="container">
+      <div class="grid grid-cols-1 gap-32 md:grid-cols-2">
+        <!-- Contact form -->
+        <div class="space-content">
+          <Heading level="h2">Send a message</Heading>
+          <Form name="contact" action="/thank-you" method="post">
+            <Input
+              name="name"
+              label="Your name"
+              required
+              autocomplete="name"
+            />
+            <Input
+              name="email"
+              label="Email address"
+              type="email"
+              required
+              autocomplete="email"
+            />
+            <Input
+              name="subject"
+              label="Subject"
+              required
+            />
+            <Textarea name="message" label="Message" required />
+            <Button htmlType="submit" type="primary">Send Message</Button>
+          </Form>
+        </div>
+
+        <!-- Contact info -->
+        <div class="space-content">
+          <Heading level="h3">Get in touch</Heading>
+          <p class="text-lg">
+            I'm based in Barcelona, Spain, and work with organizations across Europe, Latin America and beyond on
+            geospatial analysis, environmental monitoring, and spatial data infrastructure. I'm
+            open to project collaborations, consulting, and technical conversations.
+          </p>
+
+          <div class="contact-links">
+            <div class="gap-2xs flex items-center">
+              <Icon aria-hidden="true" name="lucide:mail" size={20} class="flex-shrink-0" />
+              <p>
+                <span class="font-bold">Email: </span>
+                <Link href="mailto:jccollazosave@gmail.com">jccollazosave@gmail.com</Link>
+              </p>
+            </div>
+
+            <div class="gap-2xs flex items-center">
+              <Icon aria-hidden="true" name="lucide:map-pin" size={20} class="flex-shrink-0" />
+              <p>
+                <span class="font-bold">Location: </span>
+                Barcelona, Spain
+              </p>
+            </div>
+          </div>
+
+          <Heading level="h4">Find me online</Heading>
+          <ul class="flex flex-wrap gap-2">
+            <li>
+              <Link
+                href="https://github.com/julio-collazos"
+                isButton
+                isExternal
+                hideIcon
+                animateOnHover
+                animationType="boop"
+              >
+                <Icon aria-hidden="true" name="lucide:github" size={28} />
+                <span class="sr-only">Go to GitHub profile, opens in a new tab</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="https://linkedin.com/in/julio-collazos"
+                isButton
+                isExternal
+                hideIcon
+                animateOnHover
+                animationType="boop"
+              >
+                <Icon aria-hidden="true" name="lucide:linkedin" size={28} />
+                <span class="sr-only">Go to LinkedIn profile, opens in a new tab</span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</DefaultLayout>

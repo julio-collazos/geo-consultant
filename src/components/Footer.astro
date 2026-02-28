@@ -1,0 +1,74 @@
+---
+import CallToAction from './CallToAction.astro'
+import Logo from './Logo.astro'
+import { Heading, Link } from 'accessible-astro-components'
+
+/**
+ * Footer Component
+ *
+ * @description A component that displays the footer of the website
+ */
+const currentYear = new Date().getFullYear()
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+function withBase(href: string) {
+  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#')) return href
+  return base + (href.startsWith('/') ? href : '/' + href)
+}
+---
+
+<footer>
+  <CallToAction />
+  <section class="py-12">
+    <Heading level="h2" class="sr-only">Footer</Heading>
+    <div class="container grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
+      <div class="flex flex-col gap-4">
+        <Logo loading="lazy" />
+        <p class="text-lg leading-relaxed max-w-sm">
+          Geospatial analyst and environmental data practitioner specializing in remote sensing,
+          spatial intelligence, and sustainability.
+        </p>
+      </div>
+      <div class="flex flex-col gap-4">
+        <Heading level="h3" size="h6">Quick Links</Heading>
+        <ul class="flex flex-col gap-2">
+          <li><Link href={withBase('/')}>Home</Link></li>
+          <li><Link href={withBase('/projects')}>Projects</Link></li>
+          <li><Link href={withBase('/blog')}>Blog</Link></li>
+          <li><Link href={withBase('/contact')}>Contact</Link></li>
+          <li><Link href={withBase('/accessibility-statement')}>Accessibility Statement</Link></li>
+        </ul>
+      </div>
+      <div class="flex flex-col gap-4">
+        <Heading level="h3" size="h6">Connect</Heading>
+        <ul class="flex flex-col gap-2">
+          <li>
+            <Link isExternal href="https://github.com/julio-collazos">GitHub</Link>
+          </li>
+          <li>
+            <Link isExternal href="https://linkedin.com/in/julio-collazos">LinkedIn</Link>
+          </li>
+          <li>
+            <Link href="mailto:hello@example.com">Email</Link>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="py-8">
+    <div class="container flex flex-col gap-4 md:flex-row md:justify-between">
+      <p>
+        &copy; {currentYear} - Julio Collazos. Built with <Link href="https://astro.build/">Astro</Link>.
+      </p>
+      <p>
+        This site does not collect personal data.
+      </p>
+    </div>
+  </section>
+</footer>
+
+<style>
+  section {
+    border-top: 1px solid var(--border-color-subtle);
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+title: Why Story Maps Work for Environmental Communication
+description: Reflecting on why narrative-driven spatial storytelling is uniquely effective for communicating environmental complexity to non-technical audiences.
+pubDate: 2025-12-15
+heroImage: /posts/post-image-5.png
+tags: ['Cartography', 'Science Communication', 'Story Maps']
+draft: true
+---
+
+import BlockQuote from '@components/BlockQuote.astro'
+
+Data-driven environmental stories have a communication problem. The people who most need to understand the results — decision-makers, community representatives, policy teams — are often the least equipped to interpret a GIS report or a statistical table.
+
+Story maps offer a different contract with the reader: instead of presenting evidence and asking the reader to draw conclusions, they guide the reader through a spatial narrative that makes the conclusion feel inevitable.
+
+## What Makes a Story Map Effective
+
+After working on several story map projects for environmental clients, three patterns consistently distinguish effective ones:
+
+### 1. Anchored in place, not in data
+
+The temptation when you have rich geospatial data is to show all of it. Effective story maps resist this. They anchor the narrative in specific, recognizable places — a watershed, a village, a forest edge — and use data selectively to illuminate what happened there.
+
+### 2. Sequential, not simultaneous
+
+Interactive maps that let users explore freely are powerful for analysts. For general audiences, sequential storytelling — where each scroll reveals the next piece of the narrative — is far more effective. The reader is guided rather than expected to navigate.
+
+### 3. Context before evidence
+
+Showing a deforestation map to someone unfamiliar with the region provides no useful information. Effective spatial stories establish **why this place matters** before showing evidence of change.
+
+<BlockQuote author="From a stakeholder interview">
+  I had seen maps of the area before, but this was the first time I understood what the numbers
+  actually meant for the communities living there.
+</BlockQuote>
+
+## Technical Patterns I Use
+
+My current workflow for building lightweight story maps:
+
+- **Scrollytelling** — `Intersection Observer API` to trigger map state changes as the reader scrolls
+- **Map library** — Maplibre GL JS (open-source, performant for vector tiles)
+- **Hosting** — Static site on GitHub Pages (no server required)
+- **Data** — PMtiles for vector data (single-file tile format, works without a tile server)
+
+The goal is always the same: a story that works on a phone, loads fast, and doesn't require the reader to know what a CRS is.
+
+## An Honest Limitation
+
+Story maps simplify. That's their strength and their weakness. A well-designed spatial narrative will inevitably omit uncertainty, caveats, and methodological details that matter to technical readers. The answer is not to avoid simplification, but to be honest about it — linking to full methodology documentation for those who want to go deeper.
+
+I'll be writing more about specific technical implementations in future posts.

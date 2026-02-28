@@ -1,0 +1,124 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro'
+import PageHeader from '@components/PageHeader.astro'
+import SocialShares from '@components/SocialShares.astro'
+import BreakoutImage from '@components/BreakoutImage.astro'
+import { Badge, Heading, Link } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+import { getCollection, render } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+import themeConfig from '@theme-config'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft)
+  return posts.map((post) => ({
+    params: { post: post.id },
+    props: { post },
+  }))
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>
+}
+
+const { post } = Astro.props
+const { Content } = await render(post)
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+function withBase(href: string): string {
+  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#')) return href
+  const cleanedHref = href.startsWith('/') ? href : '/' + href
+  return base + cleanedHref
+}
+
+const canonicalUrl = new URL(withBase(`/blog/${post.id}`), Astro.site ?? Astro.url).href
+
+const author = {
+  name: post.data.author ?? themeConfig.seo.author ?? 'Julio Collazos',
+  image: post.data.authorImage ?? '/posts/julio.png',
+  bio: post.data.authorBio ?? 'Geospatial analyst working on environmental intelligence and sustainability.',
+}
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+---
+
+<DefaultLayout title={post.data.title} description={post.data.description} url={canonicalUrl}>
+  <PageHeader
+    title={post.data.title}
+    subtitle={post.data.description}
+    author={author}
+    bgType="bordered"
+    featuredImage={post.data.heroImage}
+  />
+  <section class="my-8">
+    <div class="narrow container">
+      <!-- Post metadata: date and tags -->
+      <div class="post-meta flex flex-wrap items-center gap-4 mb-8">
+        <span class="flex items-center gap-2 text-sm">
+          <Icon aria-hidden="true" name="lucide:calendar" size="1rem" />
+          <time datetime={post.data.pubDate.toISOString()}>
+            {formatDate(post.data.pubDate)}
+          </time>
+        </span>
+        {
+          post.data.updatedDate && (
+            <span class="flex items-center gap-2 text-sm opacity-70">
+              <Icon aria-hidden="true" name="lucide:pencil" size="1rem" />
+              Updated: {formatDate(post.data.updatedDate)}
+            </span>
+          )
+        }
+      </div>
+      {
+        post.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-2 mb-8">
+            {post.data.tags.map((tag) => (
+              <Link href={withBase('/blog/tag/' + tag.toLowerCase().replace(/\s+/g, '-'))}>
+                <Badge>{tag}</Badge>
+              </Link>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+  <section class="my-8">
+    <div class="narrow space-content container">
+      <Content />
+    </div>
+  </section>
+  <section class="my-8">
+    <div class="narrow space-content container">
+      <Heading level="h2">Share this post</Heading>
+      <p>Found this useful? Share it with others who might benefit.</p>
+      <SocialShares url={canonicalUrl} title={post.data.title} text={post.data.description} />
+    </div>
+  </section>
+  <section class="my-8">
+    <div class="narrow container">
+      <Link href={withBase('/blog')} animateOnHover animationType="nudge" class="back-link">
+        <Icon aria-hidden="true" name="lucide:arrow-left" size="1.25rem" />
+        Back to all posts
+      </Link>
+    </div>
+  </section>
+</DefaultLayout>
+
+<style lang="scss" is:global>
+  .narrow {
+    margin-inline: auto;
+    max-width: 65ch;
+  }
+
+  .post-meta {
+    color: var(--color-neutral-600);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+</style>

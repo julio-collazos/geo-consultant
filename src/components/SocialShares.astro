@@ -1,0 +1,71 @@
+---
+import { Link } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+
+/**
+ * SocialShares Component
+ *
+ * @description A component for sharing content on social media platforms
+ */
+interface Props {
+  /**
+   * The URL to share
+   * @default Current page URL
+   */
+  url?: string
+  /**
+   * The text to share (for Twitter/X)
+   */
+  text?: string
+  /**
+   * The title of the content being shared
+   */
+  title?: string
+}
+
+const { url = Astro.url.href, text, title } = Astro.props
+
+const shareMessage = text || `Check out this post: ${title || ''}`
+---
+
+<ul class="flex flex-wrap gap-2">
+  <li>
+    <Link
+      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
+      isButton
+      isExternal
+      hideIcon
+      animateOnHover
+      animationType="boop"
+    >
+      <Icon aria-hidden="true" name="lucide:facebook" size={32} />
+      <span class="sr-only">Share on Facebook, opens in a new tab</span>
+    </Link>
+  </li>
+  <li>
+    <Link
+      href={`https://x.com/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(shareMessage)}`}
+      isButton
+      isExternal
+      hideIcon
+      animateOnHover
+      animationType="boop"
+    >
+      <Icon aria-hidden="true" name="lucide:twitter" size={32} />
+      <span class="sr-only">Share on Twitter, opens in a new tab</span>
+    </Link>
+  </li>
+  <li>
+    <Link
+      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
+      isButton
+      isExternal
+      hideIcon
+      animateOnHover
+      animationType="boop"
+    >
+      <Icon aria-hidden="true" name="lucide:linkedin" size={32} />
+      <span class="sr-only">Share on LinkedIn, opens in a new tab</span>
+    </Link>
+  </li>
+</ul>

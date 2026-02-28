@@ -1,0 +1,67 @@
+---
+import { Badge, Card, Heading, Link } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+import { getCollection } from 'astro:content'
+
+/**
+ * FeaturedPosts Component
+ *
+ * @description Displays recent blog posts from the local MDX content collection.
+ */
+interface Props {
+  class?: string
+  limit?: number
+  title?: string
+}
+
+const { class: className, limit = 3, title = 'Recent posts' } = Astro.props
+
+// Fetch posts from the local blog content collection — no external API needed
+const allPosts = await getCollection('blog', ({ data }) => !data.draft)
+allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+
+const featuredPosts = allPosts.slice(0, limit)
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+function withBase(href: string): string {
+  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#')) return href
+  const cleanedHref = href.startsWith('/') ? href : '/' + href
+  return base + cleanedHref
+}
+---
+
+<section class:list={[className, 'my-16']}>
+  <div class="container">
+    <Heading level="h2" class="mb-6">{title}</Heading>
+    <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
+      {
+        featuredPosts.map((post) => (
+          <Card
+            url={withBase('/blog/' + post.id)}
+            img={post.data.heroImage ? withBase(post.data.heroImage) : undefined}
+            headingLevel="h2"
+            title={post.data.title}
+            footer={formatDate(post.data.pubDate)}
+          >
+            <span slot="meta">
+              {post.data.tags.slice(0, 2).map((tag) => (
+                <Badge>{tag}</Badge>
+              ))}
+            </span>
+            {post.data.description}
+          </Card>
+        ))
+      }
+    </div>
+    <div class="mt-12">
+      <Link href={withBase('/blog/')} isButton animateOnHover animationType="nudge">
+        Read all posts
+        <Icon aria-hidden="true" name="lucide:arrow-right" size="1.5rem" />
+      </Link>
+    </div>
+  </div>
+</section>

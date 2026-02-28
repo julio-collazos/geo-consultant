@@ -1,0 +1,63 @@
+---
+title: EUDR GIS Auditor
+description: The EUDR GIS Auditor is a web-based tool designed to validate, audit, and clean geospatial data, specifically tailored to the requirements of the European Union Deforestation Regulation.
+author: Julio Collazos
+authorImage: /posts/julio.png
+tags: ['GIS', 'Remote Sensing', 'Python', 'React']
+pubDate: 2025-10-05
+heroImage: /posts/eudr_publication.png
+status: completed
+tools: ['Python', 'React', 'Leaflet']
+githubUrl: https://github.com/julio-collazos/EudrGisAuditor
+---
+
+import BlockQuote from '@components/BlockQuote.astro'
+import BreakoutImage from '@components/BreakoutImage.astro'
+import { Image } from 'astro:assets'
+
+## Project Overview
+
+The Land Use Change Viewer is an interactive web application designed to help environmental analysts and project managers explore multi-period land use classification data across a large geographic area. The tool integrates satellite-derived land cover maps from five time periods (2005–2020) with a spatial database of palm oil concession boundaries.
+
+<BreakoutImage src="/projects/project-image-1.png" decorative={true} />
+
+## Context & Problem
+
+Large-scale environmental monitoring projects often produce classification maps that are technically rigorous but effectively inaccessible to non-GIS specialists. Project managers needed to be able to answer questions like:
+
+- Which concessions had the highest deforestation rates between 2010 and 2015?
+- What proportion of each concession is covered by secondary vegetation today?
+- How has land use changed inside vs. outside protected areas over time?
+
+These questions require querying 3.5 million polygons across hundreds of spatial units — a task that is impossible in a standard GIS desktop without significant technical skill.
+
+## Methodology
+
+1. **Data preparation** — Satellite imagery classified using a Random Forest algorithm (scikit-learn) per time period, validated against ~1,200 reference polygons
+2. **Data model** — Land use class transitions stored in a PostGIS database with spatial indexing for fast queries
+3. **API layer** — FastAPI backend exposing time-filtered aggregation queries per spatial unit
+4. **Front end** — React-based viewer with Leaflet map, period selector, and analytics panel showing pie charts and transition matrices
+
+## Project Gallery
+
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+  <Image
+    src="/projects/project-image-1.png"
+    alt="Land use change map showing transition between concession periods"
+    width={1200}
+    height={600}
+    class="h-[250px] w-full rounded-lg object-cover"
+  />
+  <Image
+    src="/projects/project-image-2.png"
+    alt="Analytics panel with pie chart and transition matrix"
+    width={1200}
+    height={600}
+    class="h-[250px] w-full rounded-lg object-cover"
+  />
+</div>
+
+<BlockQuote author="Project Manager, Field Operations">
+  This tool cut our reporting time in half. I can now get answers that used to require a dedicated
+  GIS analyst and two days of processing.
+</BlockQuote>

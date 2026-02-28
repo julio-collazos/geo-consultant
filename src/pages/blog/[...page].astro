@@ -1,0 +1,121 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro'
+import PageHeader from '@components/PageHeader.astro'
+import { Badge, Card, Heading, Link, Pagination } from 'accessible-astro-components'
+import { getCollection } from 'astro:content'
+import type { GetStaticPaths, Page } from 'astro'
+import type { CollectionEntry } from 'astro:content'
+import { slugify } from '@utils/slugify'
+
+// Cleaned up placeholder images
+
+export const getStaticPaths = (async ({ paginate }) => {
+  // Load posts from local MDX collection and filter out drafts
+  const allPosts = await getCollection('blog', ({ data }) => !data.draft)
+
+  // Sort by date, newest first
+  allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+
+  // Collect unique tags for filtering
+  const allTags = allPosts.map((post) => post.data.tags).flat()
+  const uniqueTagLabels = [...new Set(allTags)].sort((a, b) => a.localeCompare(b))
+  const uniqueTags = uniqueTagLabels.map((label) => ({
+    label,
+    slug: slugify(label),
+  }))
+
+  return paginate(allPosts, {
+    pageSize: 6,
+    props: { uniqueTags },
+  })
+}) satisfies GetStaticPaths
+
+interface Props {
+  page: Page<CollectionEntry<'blog'>>
+  uniqueTags: { label: string; slug: string }[]
+}
+
+const { page, uniqueTags } = Astro.props
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+function withBase(href: string): string {
+  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#')) return href
+  const cleanedHref = href.startsWith('/') ? href : '/' + href
+  return base + cleanedHref
+}
+
+// Format a date for display
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+---
+
+<DefaultLayout
+  title="Blog"
+  description="Insights and analysis on geospatial data, remote sensing, environmental monitoring, and sustainability by Julio Collazos."
+>
+  <PageHeader
+    title="Blog"
+    subtitle="Insights and analysis on geospatial data, environmental intelligence, and sustainability — written for practitioners and curious readers alike."
+    bgType="bordered"
+  />
+  <section class="my-12">
+    <div class="container">
+      {
+        uniqueTags.length > 0 && (
+          <>
+            <Heading level="h2" size="h5" class="mb-2">
+              Topics
+            </Heading>
+            <div class="flex flex-wrap gap-3 mb-8">
+              {uniqueTags.map((tag: { label: string; slug: string }) => (
+                <Link href={withBase('/blog/tag/' + tag.slug)}>{tag.label}</Link>
+              ))}
+            </div>
+          </>
+        )
+      }
+      <p class="text-sm mb-4">
+        <em>Post {page.start + 1} through {page.end + 1} of {page.total} total posts</em>
+      </p>
+      <ul class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          page.data.map((post) => (
+            <li>
+              <Card
+                url={withBase('/blog/' + post.id)}
+                img={post.data.heroImage ? withBase(post.data.heroImage) : undefined}
+                title={post.data.title}
+                headingLevel="h2"
+                footer={formatDate(post.data.pubDate)}
+                fullHeight={true}
+              >
+                <span slot="meta">
+                  {post.data.tags.map((tag) => (
+                    <Badge>{tag}</Badge>
+                  ))}
+                </span>
+                {post.data.description}
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+      {
+        page && page.lastPage > 1 && (
+          <div class="mt-12 grid place-content-center">
+            <Pagination
+              firstPage={page.url.prev ? withBase('/blog') : null}
+              previousPage={page.url.prev ? withBase(page.url.prev) : null}
+              nextPage={page.url.next ? withBase(page.url.next) : null}
+              lastPage={page.url.next ? withBase(`/blog/${page.lastPage}`) : null}
+              currentPage={`${page.currentPage}`}
+              totalPages={`${page.lastPage}`}
+              ariaLabel="Blog pagination"
+            />
+          </div>
+        )
+      }
+    </div>
+  </section>
+</DefaultLayout>

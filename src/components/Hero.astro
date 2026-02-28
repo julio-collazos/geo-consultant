@@ -1,0 +1,78 @@
+---
+import { Link } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+
+/**
+ * Hero Component
+ *
+ * @description A full-width hero section with headline and CTA buttons.
+ * Uses a slot for the headline text so callers can customize it.
+ */
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+function withBase(href: string): string {
+  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#')) return href
+  return base + (href.startsWith('/') ? href : '/' + href)
+}
+
+---
+
+<section class="hero my-16">
+  <div class="container">
+    <div class="flex flex-col items-center gap-12 lg:flex-row-reverse lg:justify-between">
+      <div class="hero-image hidden lg:block">
+        <img
+          src={withBase('/Companie_logo_banner_vf.webp')}
+          alt=""
+          width="1000"
+          height="1000"
+          class="h-auto w-full max-w-[1000px]"
+        />
+      </div>
+      <div class="max-w-3xl flex flex-col items-center gap-8 md:items-start">
+        <h1 class="text-center text-5xl md:text-left lg:text-7xl leading-tight">
+          <slot
+            ><span class="text-gradient">Geospatial Analysis</span> for a Sustainable Supply Chain</slot
+          >
+        </h1>
+        <p class="text-xl text-center md:text-left max-w-2xl hero-sub">
+          I work at the intersection of <strong>remote sensing</strong>, <strong
+            >environmental data</strong
+          >, and <strong>spatial intelligence</strong> — turning complex geographic datasets into clear
+          insights for conservation, land management, and sustainability decisions.
+        </p>
+        <div class="flex flex-col gap-4 sm:flex-row">
+          <Link href={withBase('/projects')} isButton type="primary" animateOnHover animationType="boop">
+            <Icon aria-hidden="true" name="lucide:folder-open" size="1.5rem" />
+            View Projects
+          </Link>
+          <Link href={withBase('/blog')} isButton type="secondary" animateOnHover animationType="boop">
+            <Icon aria-hidden="true" name="lucide:book-open" size="1.5rem" />
+            Read Blog
+          </Link>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  h1 {
+    text-wrap: unset;
+  }
+
+  .hero-sub {
+    opacity: 0.85;
+    line-height: 1.75;
+  }
+
+  .text-gradient {
+    background: linear-gradient(
+      315deg,
+      light-dark(var(--color-primary-300), var(--color-secondary-100)) 25%,
+      light-dark(var(--color-secondary-300), var(--color-primary-200))
+    );
+    background-clip: border-box;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+</style>

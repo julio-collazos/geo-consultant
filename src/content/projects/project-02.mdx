@@ -1,0 +1,58 @@
+---
+title: Farm Monitoring Web Tool
+description: In construction...
+tags: ['Data Engineering', 'Python']
+pubDate: 2026-04-01
+heroImage: /projects/project-image-2.png
+status: in-progress
+tools: ['Python', 'ArcGIS SDK Map for JavaScript']
+githubUrl: https://github.com/julio-collazos
+---
+
+import BreakoutImage from '@components/BreakoutImage.astro'
+import { Image } from 'astro:assets'
+
+## Project Overview
+
+The Environmental Monitoring Pipeline is an automated system for ingesting, processing, and serving Sentinel-2 satellite imagery and in-situ sensor data for a conservation monitoring program. The pipeline runs weekly and provides near-real-time vegetation and water dynamics for a 400,000 ha area.
+
+<BreakoutImage src="/projects/project-image-2.png" decorative={true} />
+
+## Context & Problem
+
+Conservation monitoring organizations typically analyze satellite data manually and periodically — a workflow that is slow, labor-intensive, and produces inconsistent results across analysts. The goal was to design a system that would:
+
+- Automate image acquisition and preprocessing without manual intervention
+- Store results in a queryable spatial database
+- Surface alerts when vegetation health indicators drop below critical thresholds
+- Work within the infrastructure constraints of a small technical team (no dedicated data engineering team)
+
+## Methodology
+
+The pipeline follows a four-stage architecture:
+
+1. **Ingestion** — Google Earth Engine Python API scheduled via GitHub Actions, pulling weekly Sentinel-2 composites (cloud-masked, median-reduced)
+2. **Processing** — Spectral indices (NDVI, NDWI, EVI) computed per monitoring zone and stored as both raster summaries and polygon statistics in PostGIS
+3. **Alert system** — PostgreSQL triggers flag zones where NDVI drops >15% below the 5-year baseline for the same seasonal window
+4. **API** — Lightweight FastAPI service provides data to the visualization dashboard
+
+## Project Gallery
+
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+  <Image
+    src="/projects/project-image-2.png"
+    alt="Pipeline architecture diagram showing data flow from satellite to database"
+    width={1200}
+    height={600}
+    class="h-[250px] w-full rounded-lg object-cover"
+  />
+  <Image
+    src="/projects/project-image-3.png"
+    alt="Dashboard showing vegetation health time series and alert zones"
+    width={1200}
+    height={600}
+    class="h-[250px] w-full rounded-lg object-cover"
+  />
+</div>
+
+The entire pipeline runs on Docker Compose and can be deployed on a single virtual machine, keeping infrastructure costs minimal while handling weekly processing for the full area of interest.

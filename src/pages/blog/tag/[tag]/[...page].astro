@@ -1,0 +1,110 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro'
+import PageHeader from '@components/PageHeader.astro'
+import { Badge, Card, Heading, Link, Pagination } from 'accessible-astro-components'
+import { getCollection } from 'astro:content'
+import type { GetStaticPaths, Page } from 'astro'
+import type { CollectionEntry } from 'astro:content'
+import { slugify } from '@utils/slugify'
+
+// Cleaned up placeholder images
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const allPosts = await getCollection('blog', ({ data }) => !data.draft)
+  allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+
+  // Build all unique tags
+  const allTags = allPosts.flatMap((post) => post.data.tags)
+  const uniqueTags = [...new Set(allTags)]
+
+  // For each tag, generate paginated paths
+  return uniqueTags.flatMap((tag) => {
+    const taggedPosts = allPosts.filter((post) => post.data.tags.includes(tag))
+
+    return paginate(taggedPosts, {
+      params: { tag: slugify(tag) },
+      props: { tagLabel: tag },
+      pageSize: 6,
+    })
+  })
+}) satisfies GetStaticPaths
+
+interface Props {
+  page: Page<CollectionEntry<'blog'>>
+  tagLabel: string
+}
+
+const { page, tagLabel } = Astro.props
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+function withBase(href: string): string {
+  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#')) return href
+  const cleanedHref = href.startsWith('/') ? href : '/' + href
+  return base + cleanedHref
+}
+---
+
+<DefaultLayout
+  title={`Blog — ${tagLabel}`}
+  description={`Posts tagged with "${tagLabel}" by Julio Collazos.`}
+>
+  <PageHeader
+    title={`Topic: ${tagLabel}`}
+    subtitle={`All posts tagged with "${tagLabel}". Browse by topic or go back to all posts.`}
+    bgType="bordered"
+  />
+  <section class="my-8">
+    <div class="container">
+      <div class="mb-8">
+        <Link href={withBase('/blog')} animateOnHover animationType="nudge">← Back to all posts</Link>
+      </div>
+      <p class="text-sm mb-4">
+        <em>Post {page.start + 1} through {page.end + 1} of {page.total} posts</em>
+      </p>
+      <ul class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          page.data.map((post) => (
+            <li>
+              <Card
+                url={withBase('/blog/' + post.id)}
+                img={post.data.heroImage ? withBase(post.data.heroImage) : undefined}
+                title={post.data.title}
+                headingLevel="h2"
+                footer={formatDate(post.data.pubDate)}
+                fullHeight={true}
+              >
+                <span slot="meta">
+                  {post.data.tags.map((tag) => (
+                    <Badge>{tag}</Badge>
+                  ))}
+                </span>
+                {post.data.description}
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+      {
+        page && page.lastPage > 1 && (
+          <div class="mt-12 grid place-content-center">
+            <Pagination
+              firstPage={page.url.prev ? withBase(`/blog/tag/${Astro.params.tag}`) : null}
+              previousPage={page.url.prev ? withBase(page.url.prev) : null}
+              nextPage={page.url.next ? withBase(page.url.next) : null}
+              lastPage={
+                page.url.next ? withBase(`/blog/tag/${Astro.params.tag}/${page.lastPage}`) : null
+              }
+              currentPage={`${page.currentPage}`}
+              totalPages={`${page.lastPage}`}
+              ariaLabel="Blog tag pagination"
+            />
+          </div>
+        )
+      }
+    </div>
+  </section>
+</DefaultLayout>

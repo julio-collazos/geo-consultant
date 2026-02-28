@@ -1,0 +1,198 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro'
+import PageHeader from '@components/PageHeader.astro'
+import SocialShares from '@components/SocialShares.astro'
+import { Badge, Heading, Link } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+import { getCollection, render } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects')
+  return projects.map((project) => ({
+    params: { project: project.id },
+    props: { project },
+  }))
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>
+}
+
+const { project } = Astro.props
+const { Content } = await render(project)
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+function withBase(href: string): string {
+  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#')) return href
+  const cleanedHref = href.startsWith('/') ? href : '/' + href
+  return base + cleanedHref
+}
+
+const canonicalUrl = new URL(withBase(`/projects/${project.id}`), Astro.site ?? Astro.url).href
+
+// Map status to a readable label
+const statusLabel: Record<string, string> = {
+  completed: 'Completed',
+  'in-progress': 'In Progress',
+  archived: 'Archived',
+}
+---
+
+<DefaultLayout
+  title={project.data.title}
+  description={project.data.description}
+  url={canonicalUrl}
+>
+  <PageHeader
+    title={project.data.title}
+    subtitle={project.data.description}
+    bgType="bordered"
+    featuredImage={project.data.heroImage}
+  />
+
+  <section class="my-8">
+    <div class="narrow container">
+      <!-- Status + Tools metadata bar -->
+      <div class="project-meta mb-8">
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+          <span class="status-badge status-{project.data.status}">
+            <Icon aria-hidden="true" name="lucide:circle-check" size="1rem" />
+            {statusLabel[project.data.status] ?? project.data.status}
+          </span>
+        </div>
+
+        {
+          project.data.tools.length > 0 && (
+            <div class="tools-list">
+              <span class="tools-label">
+                <Icon aria-hidden="true" name="lucide:wrench" size="1rem" />
+                Tools & Technologies
+              </span>
+              <div class="flex flex-wrap gap-2 mt-2">
+                {project.data.tools.map((tool) => (
+                  <Badge>{tool}</Badge>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        <!-- External links -->
+        {
+          (project.data.githubUrl || project.data.demoUrl || project.data.relatedLinks?.length) && (
+            <div class="project-links mt-4 flex flex-wrap gap-4">
+              {project.data.githubUrl && (
+                <Link href={project.data.githubUrl} isExternal isButton type="secondary" animateOnHover animationType="boop">
+                  <Icon aria-hidden="true" name="lucide:github" size="1.25rem" />
+                  View on GitHub
+                </Link>
+              )}
+              {project.data.demoUrl && (
+                <Link href={project.data.demoUrl} isExternal isButton type="primary" animateOnHover animationType="boop">
+                  <Icon aria-hidden="true" name="lucide:external-link" size="1.25rem" />
+                  Live Demo
+                </Link>
+              )}
+              {project.data.relatedLinks?.map((link: { label: string; href: string }) => (
+                <Link href={link.href} isExternal animateOnHover animationType="nudge">
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          )
+        }
+      </div>
+
+      <!-- Tags -->
+      {
+        project.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-2 mb-8">
+            {project.data.tags.map((tag) => (
+              <Link href={withBase('/projects/tag/' + tag.toLowerCase().replace(/\s+/g, '-'))}>
+                <Badge>{tag}</Badge>
+              </Link>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="my-8">
+    <div class="narrow space-content container">
+      <Content />
+    </div>
+  </section>
+
+  <section class="my-8">
+    <div class="narrow space-content container">
+      <Heading level="h2">Share this project</Heading>
+      <p>Find this project interesting? Share it with your network.</p>
+      <SocialShares />
+    </div>
+  </section>
+
+  <section class="my-8">
+    <div class="narrow container">
+      <Link href={withBase('/projects')} animateOnHover animationType="nudge" class="back-link">
+        <Icon aria-hidden="true" name="lucide:arrow-left" size="1.25rem" />
+        Back to all projects
+      </Link>
+    </div>
+  </section>
+</DefaultLayout>
+
+<style lang="scss" is:global>
+  .narrow {
+    margin-inline: auto;
+    max-width: 65ch;
+  }
+
+  .project-meta {
+    padding: var(--space-m);
+    border: 1px solid var(--border-color-subtle);
+    border-radius: var(--radius-md);
+    background: var(--color-neutral-100);
+
+    .dark & {
+      background: var(--color-neutral-900);
+    }
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    &.status-completed {
+      background: color-mix(in srgb, var(--color-primary) 15%, transparent);
+      color: var(--color-primary);
+    }
+
+    &.status-in-progress {
+      background: color-mix(in srgb, #f59e0b 15%, transparent);
+      color: #92400e;
+    }
+
+    &.status-archived {
+      background: color-mix(in srgb, var(--color-neutral) 25%, transparent);
+      color: var(--color-neutral-700);
+    }
+  }
+
+  .tools-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-neutral-600);
+  }
+</style>
