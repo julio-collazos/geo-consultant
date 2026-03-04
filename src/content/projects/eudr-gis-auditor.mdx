@@ -15,49 +15,67 @@ import BlockQuote from '@components/BlockQuote.astro'
 import BreakoutImage from '@components/BreakoutImage.astro'
 import { Image } from 'astro:assets'
 
-## Project Overview
+### Project Overview
 
-The Land Use Change Viewer is an interactive web application designed to help environmental analysts and project managers explore multi-period land use classification data across a large geographic area. The tool integrates satellite-derived land cover maps from five time periods (2005–2020) with a spatial database of palm oil concession boundaries.
+The **EUDR GIS Auditor** is a web-based tool designed to **validate**, **audit**, and **clean geospatial data**, 
+specifically tailored to the requirements of the **European Union Deforestation Regulation (EUDR)**. 
+It processes common GIS file formats, identifies and fixes errors, and provides an **interactive dashboard and map** 
+for thorough review.
 
-<BreakoutImage src="/projects/project-image-1.png" decorative={true} />
+<iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7380594229959479296?compact=1" height="576" width="100%" frameborder="0" allowfullscreen="" title="Publicación integrada"></iframe>
+>> This video shows how to setup and use the tool
 
-## Context & Problem
+---
+### 🛠️ Setup & Installation
 
-Large-scale environmental monitoring projects often produce classification maps that are technically rigorous but effectively inaccessible to non-GIS specialists. Project managers needed to be able to answer questions like:
+The simplest way to run this application is with **Docker** and **Docker Compose**, which handle all dependencies automatically.
 
-- Which concessions had the highest deforestation rates between 2010 and 2015?
-- What proportion of each concession is covered by secondary vegetation today?
-- How has land use changed inside vs. outside protected areas over time?
+> **Clone the repository:**
 
-These questions require querying 3.5 million polygons across hundreds of spatial units — a task that is impossible in a standard GIS desktop without significant technical skill.
+   ```bash
+   git clone https://github.com/julio-collazos/EudrGisAuditor.git
+   cd EudrGisAuditor
+   ```
 
-## Methodology
+> **Start the application (using a Python environment):**
+   
+   **Step 1:** Create and Activate the Conda Environment:
+   
+   Create a new environment with Python 3.10:
 
-1. **Data preparation** — Satellite imagery classified using a Random Forest algorithm (scikit-learn) per time period, validated against ~1,200 reference polygons
-2. **Data model** — Land use class transitions stored in a PostGIS database with spatial indexing for fast queries
-3. **API layer** — FastAPI backend exposing time-filtered aggregation queries per spatial unit
-4. **Front end** — React-based viewer with Leaflet map, period selector, and analytics panel showing pie charts and transition matrices
+   ```bash
+   conda create -n eudrgisauditor python=3.10 -y
+   conda activate eudrgisauditor
+   ```
 
-## Project Gallery
+   **Step 2:** Install Dependencies
 
-<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-  <Image
-    src="/projects/project-image-1.png"
-    alt="Land use change map showing transition between concession periods"
-    width={1200}
-    height={600}
-    class="h-[250px] w-full rounded-lg object-cover"
-  />
-  <Image
-    src="/projects/project-image-2.png"
-    alt="Analytics panel with pie chart and transition matrix"
-    width={1200}
-    height={600}
-    class="h-[250px] w-full rounded-lg object-cover"
-  />
-</div>
+   Install GDAL via Conda, then install the remaining packages from requirements.txt:
+   ```bash
+   conda install -c conda-forge gdal=3.6.2 -y
+   pip install -r requirements.txt
+   ```
 
-<BlockQuote author="Project Manager, Field Operations">
-  This tool cut our reporting time in half. I can now get answers that used to require a dedicated
-  GIS analyst and two days of processing.
-</BlockQuote>
+   **Step 3:** Launch the Application
+
+
+
+   Run the main script:
+   ```bash
+   python start.py
+   ```
+
+   Once launched, you're ready to explore the tool!
+
+> **Access the app:**
+
+   Open your browser and navigate to 👉 [http://localhost:5000](http://localhost:5000)
+
+---
+
+## 🚀 Features
+
+* **Geospatial Auditing** → Checks for geometry issues (e.g., self-intersections) and validates against standards like **WGS84**.
+* **Automatic Fixes** → Corrects minor geometry errors to save you time.
+* **Data Partitioning** → Classifies features as **valid**, **needs review**, or **conversion candidates** (e.g., small polygons → points).
+* **Interactive Visualization** → Audit findings are displayed in a **dashboard** and on a **Leaflet-based map**, making flagged entities easy to inspect.
