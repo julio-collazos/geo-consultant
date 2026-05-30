@@ -1,0 +1,119 @@
+---
+import { Badge, Link } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+
+interface Props {
+  title: string
+  description: string
+  href: string
+  imageSrc?: string
+  tags?: string[]
+  publishedAt?: string
+}
+
+const { title, description, href, imageSrc, tags = [], publishedAt } = Astro.props
+---
+
+<article class="writing-card">
+  {
+    imageSrc && (
+      <div class="writing-card__image-wrap">
+        <img src={imageSrc} alt="" loading="lazy" class="writing-card__image" />
+      </div>
+    )
+  }
+  <div class="writing-card__body">
+    {
+      tags.length > 0 && (
+        <div class="writing-card__tags">
+          {tags.slice(0, 3).map((tag) => (
+            <Badge>{tag}</Badge>
+          ))}
+        </div>
+      )
+    }
+    <h3 class="writing-card__title">{title}</h3>
+    <p class="writing-card__desc">{description}</p>
+    <div class="writing-card__footer">
+      {publishedAt && <span class="writing-card__date">{publishedAt}</span>}
+      <Link href={href} isExternal isButton type="secondary" animateOnHover animationType="boop">
+        Read on Medium
+        <Icon aria-hidden="true" name="lucide:external-link" size="1rem" />
+      </Link>
+    </div>
+  </div>
+</article>
+
+<style lang="scss">
+  .writing-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color-subtle);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: light-dark(white, var(--color-neutral-900));
+    transition: box-shadow var(--animation-speed-fast) var(--cubic-bezier);
+
+    &:hover {
+      box-shadow: var(--elevation-2);
+    }
+  }
+
+  .writing-card__image-wrap {
+    aspect-ratio: var(--ratio-landscape);
+    overflow: hidden;
+  }
+
+  .writing-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--animation-speed-medium) var(--cubic-bezier);
+
+    .writing-card:hover & {
+      transform: scale(1.03);
+    }
+  }
+
+  .writing-card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: var(--space-m);
+    gap: var(--space-xs);
+  }
+
+  .writing-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs);
+  }
+
+  .writing-card__title {
+    font-size: var(--font-size-1);
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .writing-card__desc {
+    font-size: var(--font-size-0);
+    opacity: 0.8;
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .writing-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+    flex-wrap: wrap;
+  }
+
+  .writing-card__date {
+    font-size: var(--font-size--1);
+    opacity: 0.6;
+  }
+</style>

@@ -1,0 +1,75 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro'
+import PageHeader from '@components/PageHeader.astro'
+import WritingCard from '@components/WritingCard.astro'
+import { Link } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+
+// [USER INPUT REQUIRED] Replace href values with your real Medium article URLs.
+// Replace publishedAt with the real publication dates.
+// Replace imageSrc with the actual thumbnail images for each article.
+const articles = [
+  {
+    title: 'How to measure supplier risk? a GIS approach',
+    description:
+      'Demonstrates a risk-based supplier screening workflow for deforestation and ecosystem risk. Each mill is evaluated across five environmental dimensions within a configurable sourcing radius: Tree Cover Loss, Water Stress, Protected Areas, Peat Soil and Wetland.',
+    // [USER INPUT REQUIRED] Publish this article to Medium and replace the URL below
+    href: 'https://medium.com/@julio-collazos/how-to-measure-supplier-risk-a-gis-approach-725e342118c0',
+    imageSrc: base + '/posts/img_1.png',
+    tags: ['Cartography', 'Communication', 'Risk Assessment'],
+    publishedAt: 'May 2026',
+  },
+  {
+    title: 'Validating Geospatial Data for EUDR Compliance: A Technical Deep Dive',
+    description:
+      'A walkthrough of the algorithmic decisions behind automated GIS data validation for EUDR — CRS detection, topology correction, and area classification at scale.',
+    href: 'https://medium.com/@jccollazosave/validating-geospatial-data-for-eudr-compliance-a-technical-deep-dive-aed634ffdc0b',
+    imageSrc: base + '/posts/eudr-gis-auditor.png',
+    tags: ['EUDR', 'Python', 'GIS'],
+    publishedAt: 'October 2025',
+  },
+  {
+    title: 'GeoJSON and the EU Deforestation Regulation (EUDR)',
+    description:
+      'A practical guide to the GeoJSON format requirements for EUDR compliance: coordinate systems, permitted geometry types, file size limits, and the most common submission errors.',
+    href: 'https://medium.com/@jccollazosave/geojson-y-la-regulaci%C3%B3n-en-productos-libres-de-deforestaci%C3%B3n-eudr-6b2e7da43049',
+    imageSrc: base + '/posts/eudr_publication.png',
+    tags: ['EUDR', 'GeoJSON', 'Compliance'],
+    publishedAt: 'October 2024',
+  },
+]
+---
+
+<DefaultLayout
+  title="Writing"
+  description="Articles on geospatial methods, EUDR compliance, and environmental data — published on Medium by Julio Collazos."
+>
+  <PageHeader
+    title="Writing"
+    subtitle="I write about geospatial methods, EUDR compliance, and environmental data for practitioners and sustainability teams. All articles are published on Medium."
+    bgType="bordered"
+  />
+
+  <section class="my-16">
+    <div class="container">
+      <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
+        {articles.map((article) => <WritingCard {...article} />)}
+      </div>
+
+      <div class="mt-12 flex justify-center">
+        <Link
+          href="https://medium.com/@julio-collazos"
+          isExternal
+          isButton
+          animateOnHover
+          animationType="nudge"
+        >
+          Read all articles on Medium
+          <Icon aria-hidden="true" name="lucide:external-link" size="1.25rem" />
+        </Link>
+      </div>
+    </div>
+  </section>
+</DefaultLayout>

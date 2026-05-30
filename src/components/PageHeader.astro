@@ -136,7 +136,7 @@ const sanitizedSubtitle: string = subtitle
                   return formatSegment(segment)
                 })()
 
-                return <BreadcrumbsItem href={isLast ? undefined : url} label={formattedName} currentPage={isLast} />
+                return <BreadcrumbsItem href={isLast ? undefined : withBase(url)} label={formattedName} currentPage={isLast} />
               })}
             </Breadcrumbs>
           )

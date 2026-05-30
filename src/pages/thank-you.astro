@@ -1,22 +1,47 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro'
 import PageHeader from '@components/PageHeader.astro'
-import { Heading, Link, Notification } from 'accessible-astro-components'
+import { Link } from 'accessible-astro-components'
 import { Icon } from 'astro-icon/components'
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 ---
 
-<DefaultLayout title="Thank You">
-  <PageHeader title="Splendid!" subtitle="The form was successfully validated." bgType="gradient" />
+<DefaultLayout title="You're all set" description="Confirmation page.">
+  <PageHeader title="You're all set" subtitle="We'll be in touch soon." bgType="gradient" />
   <section class="container my-16">
-    <div class="space-content">
-      <Notification type="info">
-        <Icon aria-hidden="true" name="lucide:info" size={24} />
-        <p>This was a test of the form validation system, no email was sent 😉.</p>
-      </Notification>
-      <Link href="/contact" isButton type="primary" animateOnHover animation="boop" pulse>
-        <Icon aria-hidden="true" name="lucide:mail" size={24} />
-        Send another message
-      </Link>
+    <div class="confirmation-block">
+      <Icon aria-hidden="true" name="lucide:circle-check" size={48} class="confirm-icon" />
+      <p class="text-lg">
+        Keep an eye on your inbox — and if you're waiting for a file, check your spam folder too.
+      </p>
+      <div class="flex flex-col gap-3 sm:flex-row justify-center mt-4">
+        <Link href={base + '/'} isButton type="secondary" animateOnHover animationType="boop">
+          <Icon aria-hidden="true" name="lucide:home" size={20} />
+          Back to home
+        </Link>
+        <Link href={base + '/book'} isButton type="primary" animateOnHover animationType="boop">
+          <Icon aria-hidden="true" name="lucide:calendar" size={20} />
+          Book a free call
+        </Link>
+      </div>
     </div>
   </section>
 </DefaultLayout>
+
+<style lang="scss">
+  .confirmation-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-m);
+    padding: var(--space-2xl);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .confirm-icon {
+    color: var(--color-primary-400);
+  }
+</style>

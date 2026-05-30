@@ -34,13 +34,13 @@ export default defineThemeConfig({
       },
       {
         type: 'link',
-        label: 'Blog',
-        href: '/blog',
+        label: 'Writing',
+        href: '/writing',
       },
       {
         type: 'link',
-        label: 'Contact',
-        href: '/contact',
+        label: 'Book a Call',
+        href: '/book',
       },
       {
         type: 'link',

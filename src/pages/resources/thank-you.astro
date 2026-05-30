@@ -1,0 +1,57 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro'
+import PageHeader from '@components/PageHeader.astro'
+import { Link } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+---
+
+<DefaultLayout
+  title="Check Your Inbox"
+  description="Your EUDR checklist is on the way."
+>
+  <PageHeader
+    title="Check your inbox"
+    subtitle="The EUDR Geospatial Compliance Checklist is on its way to you."
+    bgType="gradient"
+  />
+
+  <section class="my-16">
+    <div class="container">
+      <div class="confirmation-block">
+        <Icon aria-hidden="true" name="lucide:mail-check" size="3rem" class="confirm-icon" />
+        <p class="text-lg">
+          If you don't see the email in a few minutes, check your spam or promotions folder.
+        </p>
+        <div class="flex flex-col gap-3 sm:flex-row justify-center mt-4">
+          <Link href={base + '/resources'} isButton type="secondary" animateOnHover animationType="boop">
+            <Icon aria-hidden="true" name="lucide:arrow-left" size="1.25rem" />
+            Back to Resources
+          </Link>
+          <Link href={base + '/book'} isButton type="primary" animateOnHover animationType="boop">
+            <Icon aria-hidden="true" name="lucide:calendar" size="1.25rem" />
+            Book a Free Call
+          </Link>
+        </div>
+      </div>
+    </div>
+  </section>
+</DefaultLayout>
+
+<style lang="scss">
+  .confirmation-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-m);
+    padding: var(--space-2xl);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .confirm-icon {
+    color: var(--color-primary-400);
+  }
+</style>

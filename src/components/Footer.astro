@@ -3,11 +3,6 @@ import CallToAction from './CallToAction.astro'
 import Logo from './Logo.astro'
 import { Heading, Link } from 'accessible-astro-components'
 
-/**
- * Footer Component
- *
- * @description A component that displays the footer of the website
- */
 const currentYear = new Date().getFullYear()
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
@@ -25,8 +20,8 @@ function withBase(href: string) {
       <div class="flex flex-col gap-4">
         <Logo loading="lazy" />
         <p class="text-lg leading-relaxed max-w-sm">
-          Geospatial analyst and environmental data practitioner specializing in remote sensing,
-          spatial intelligence, and sustainability.
+          Geospatial consulting for EUDR compliance, supply chain traceability, and environmental
+          intelligence.
         </p>
       </div>
       <div class="flex flex-col gap-4">
@@ -34,8 +29,8 @@ function withBase(href: string) {
         <ul class="flex flex-col gap-2">
           <li><Link href={withBase('/')}>Home</Link></li>
           <li><Link href={withBase('/projects')}>Projects</Link></li>
-          <li><Link href={withBase('/blog')}>Blog</Link></li>
-          <li><Link href={withBase('/contact')}>Contact</Link></li>
+          <li><Link href={withBase('/writing')}>Writing</Link></li>
+          <li><Link href={withBase('/book')}>Book a Call</Link></li>
           <li><Link href={withBase('/accessibility-statement')}>Accessibility Statement</Link></li>
         </ul>
       </div>
@@ -49,7 +44,7 @@ function withBase(href: string) {
             <Link isExternal href="https://linkedin.com/in/julio-collazos">LinkedIn</Link>
           </li>
           <li>
-            <Link href="mailto:hello@example.com">Email</Link>
+            <Link href="mailto:jccollazosave@gmail.com">Email</Link>
           </li>
         </ul>
       </div>

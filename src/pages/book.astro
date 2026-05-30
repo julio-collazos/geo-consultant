@@ -1,0 +1,122 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro'
+import PageHeader from '@components/PageHeader.astro'
+import { Heading } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+---
+
+<DefaultLayout
+  title="Book a Free 30-Min Call"
+  description="Book a free 30-minute consultation with Julio Collazos — geospatial consultant specialising in EUDR compliance, supply chain traceability, and environmental remote sensing."
+>
+  <PageHeader
+    title="Book a Free 30-Min Call"
+    subtitle="No pitch, no obligations — a focused conversation about your geospatial data situation."
+    bgType="gradient"
+  />
+
+  <section class="my-16">
+    <div class="container">
+      <div class="grid grid-cols-1 gap-16 lg:grid-cols-2">
+
+        <!-- Left: context -->
+        <div class="space-content">
+          <Heading level="h2">What we'll cover</Heading>
+          <ul class="call-list">
+            <li>
+              <Icon aria-hidden="true" name="lucide:check-circle" size="1.25rem" class="icon-check" />
+              <span>Your geospatial data situation — formats, volumes, current pain points</span>
+            </li>
+            <li>
+              <Icon aria-hidden="true" name="lucide:check-circle" size="1.25rem" class="icon-check" />
+              <span>Whether your data meets EUDR submission requirements</span>
+            </li>
+            <li>
+              <Icon aria-hidden="true" name="lucide:check-circle" size="1.25rem" class="icon-check" />
+              <span>Quick wins you can act on immediately</span>
+            </li>
+            <li>
+              <Icon aria-hidden="true" name="lucide:check-circle" size="1.25rem" class="icon-check" />
+              <span>Whether and how I could help further</span>
+            </li>
+          </ul>
+
+          <Heading level="h3">Who this call is for</Heading>
+          <p>
+            Sustainability managers, supply chain analysts, and GIS teams who need to validate or
+            structure geospatial data for EUDR due diligence — and aren't sure where to start or
+            what's missing.
+          </p>
+
+          <Heading level="h3">What to expect</Heading>
+          <p>
+            30 minutes, video call. I'll ask a few questions about your data and your workflow,
+            then share what I see. You'll leave with at least one clear next step — whether that
+            involves me or not.
+          </p>
+        </div>
+
+        <!-- Right: booking embed -->
+        <div class="booking-embed-wrapper">
+
+          <!-- Cal.eu inline embed -->
+          <div style="width:100%;height:100%;overflow:scroll" id="my-cal-inline-30min"></div>
+          <script type="text/javascript">
+            (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.eu/embed/embed.js", "init");
+            Cal("init", "30min", {origin:"https://app.cal.eu"});
+            Cal.ns["30min"]("inline", {
+              elementOrSelector:"#my-cal-inline-30min",
+              config: {"layout":"month_view","useSlotsViewOnSmallScreen":"true","name":"","email":""},
+              calLink: "julio-collazos/30min",
+            });
+            Cal.ns["30min"]("ui", {
+              "hideEventTypeDetails": false,
+              "layout": "month_view",
+              "styles": {"branding": {"brandColor": "#2d6a4f"}},
+            });
+          </script>
+
+          <!--
+          To switch to Calendly instead:
+          - Comment out the Cal.eu div and script above
+          - Uncomment the block below
+          - Replace YOUR_USERNAME/30min with your Calendly link
+
+          <div class="calendly-inline-widget"
+            data-url="https://calendly.com/YOUR_USERNAME/30min?hide_gdpr_banner=1&primary_color=2d6a4f"
+            style="min-width:320px; height:700px;"></div>
+          <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+          -->
+
+        </div>
+      </div>
+    </div>
+  </section>
+</DefaultLayout>
+
+<style lang="scss">
+  .call-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2xs);
+    }
+  }
+
+  .icon-check {
+    color: var(--color-primary-400);
+    flex-shrink: 0;
+    margin-top: 0.15em;
+  }
+
+  .booking-embed-wrapper {
+    min-height: 500px;
+  }
+
+</style>

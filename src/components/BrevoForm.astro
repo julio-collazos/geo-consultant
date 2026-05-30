@@ -1,0 +1,197 @@
+---
+interface Props {
+  title?: string
+  subtitle?: string
+}
+
+const { title = 'Send me the checklist', subtitle = 'Free · No spam · Unsubscribe any time' } =
+  Astro.props
+---
+
+<div class="brevo-form-wrapper">
+  <!--
+  ============================================================
+  OPTION A: Brevo (formerly Sendinblue) — RECOMMENDED
+  Free tier: 300 emails/day, unlimited contacts, built-in automation.
+  The automation sends the PDF link automatically on signup.
+
+  Setup steps:
+  1. Create account at https://brevo.com (free)
+  2. Go to "Contacts" → "Forms" → Create a new subscription form
+  3. Add fields: Email (required), First Name (optional)
+  4. Set the redirect URL to:
+       https://julio-collazos.github.io/geo-consultant/resources/thank-you
+  5. Go to "Automations" → Create automation:
+       - Trigger: "A contact subscribes to a list"
+       - Action: Send email
+       - Email body: include a link to your PDF (Google Drive, Dropbox, or /public/resources/...)
+  6. Back in Forms → "Share" → copy the JavaScript embed snippet
+  7. REPLACE the placeholder div below with the full script snippet from Brevo
+     (it looks like: <script>window.sib = { ... }; ...</script><div id="sib-form">...)
+  ============================================================
+  -->
+
+  <!-- [USER INPUT REQUIRED] Replace everything inside this section with your Brevo embed snippet -->
+  <div class="brevo-placeholder">
+    <p class="form-title">{title}</p>
+    <p class="form-subtitle">{subtitle}</p>
+    <p class="placeholder-notice">
+      <strong>Action needed:</strong> Paste your Brevo JavaScript embed snippet here.
+      See the comments in <code>src/components/BrevoForm.astro</code> for setup steps.
+    </p>
+  </div>
+
+  <!--
+  ============================================================
+  OPTION B: Formspree (full HTML control over form styling, 50 submissions/month free)
+
+  Differences vs. Brevo:
+  - You control every pixel of the form design
+  - Formspree does NOT auto-send the PDF — you receive an email notification and must reply
+  - Paid plan ($10/mo) adds webhook/Zapier automation for auto-delivery
+  - Free tier limit is 50 submissions/month — enough for early traction
+
+  Setup steps:
+  1. Create account at https://formspree.io (free)
+  2. Create a new form → copy the form ID (looks like "xabcdefg")
+  3. Replace YOUR_FORM_ID below with your ID
+  4. The _next field redirects to the thank-you page after submission
+
+  To switch to Formspree:
+  - Comment out the Brevo placeholder div above
+  - Uncomment the form block below
+  ============================================================
+
+  <form
+    class="resource-form"
+    action="https://formspree.io/f/YOUR_FORM_ID"
+    method="POST"
+  >
+    <label for="resource-email" class="form-label">Email address</label>
+    <div class="form-row">
+      <input
+        id="resource-email"
+        type="email"
+        name="email"
+        placeholder="you@example.com"
+        required
+        class="form-input"
+      />
+      <button type="submit" class="form-btn">
+        Send me the checklist
+      </button>
+    </div>
+    <input type="hidden" name="_subject" value="EUDR Checklist Download Request" />
+    <input
+      type="hidden"
+      name="_next"
+      value="https://julio-collazos.github.io/geo-consultant/resources/thank-you"
+    />
+    <p class="form-note">Free · No spam · Unsubscribe any time</p>
+  </form>
+  -->
+</div>
+
+<style lang="scss">
+  .brevo-form-wrapper {
+    width: 100%;
+  }
+
+  .brevo-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    border: 2px dashed var(--border-color-subtle);
+    border-radius: var(--radius-l);
+  }
+
+  .form-title {
+    font-size: var(--font-size-1);
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .form-subtitle {
+    font-size: var(--font-size--1);
+    opacity: 0.6;
+    margin: 0;
+  }
+
+  .placeholder-notice {
+    font-size: var(--font-size--1);
+    opacity: 0.8;
+    background: light-dark(var(--color-neutral-200), var(--color-neutral-800));
+    padding: var(--space-xs) var(--space-s);
+    border-radius: var(--radius-m);
+
+    code {
+      font-size: 0.9em;
+      background: light-dark(var(--color-neutral-300), var(--color-neutral-700));
+      padding: 0.1em 0.35em;
+      border-radius: var(--radius-xs);
+    }
+  }
+
+  /* Styles for the Formspree option when uncommented */
+  .resource-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  .form-label {
+    font-weight: 600;
+    font-size: var(--font-size-0);
+  }
+
+  .form-row {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+
+  .form-input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.6em 1em;
+    border: 1px solid var(--border-color-subtle);
+    border-radius: var(--radius-m);
+    font-size: var(--font-size-0);
+    background: light-dark(white, var(--color-neutral-900));
+    color: var(--foreground-color);
+
+    &:focus {
+      outline: 3px dotted var(--outline-color);
+      outline-offset: 4px;
+    }
+  }
+
+  .form-btn {
+    padding: 0.6em 1.25em;
+    background: var(--color-primary-400);
+    color: white;
+    border: none;
+    border-radius: var(--radius-m);
+    font-size: var(--font-size-0);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--animation-speed-fast);
+
+    &:hover {
+      background: var(--color-primary-300);
+    }
+
+    &:focus {
+      outline: 3px dotted var(--outline-color);
+      outline-offset: 4px;
+    }
+  }
+
+  .form-note {
+    font-size: var(--font-size--1);
+    opacity: 0.6;
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,79 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro'
+import PageHeader from '@components/PageHeader.astro'
+import ResourceCard from '@components/ResourceCard.astro'
+import BrevoForm from '@components/BrevoForm.astro'
+import { Heading } from 'accessible-astro-components'
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+---
+
+<DefaultLayout
+  title="Free Resources"
+  description="Free guides and checklists on EUDR geospatial compliance, GIS data validation, and supply chain traceability — by Julio Collazos."
+>
+  <PageHeader
+    title="Free Resources"
+    subtitle="Practical guides for geospatial analysts, sustainability managers, and supply chain teams working on EUDR compliance."
+    bgType="gradient"
+  />
+
+  <section class="my-16">
+    <div class="container">
+      <div class="grid grid-cols-1 gap-16 lg:grid-cols-2 items-start">
+
+        <!-- Left: resource description -->
+        <ResourceCard
+          title="EUDR Geospatial Compliance Checklist"
+          description="A practical 12-point checklist covering coordinate system requirements, geometry validation rules, file size limits, and the most common errors that cause EUDR system rejections. Includes annotated GeoJSON examples you can use as a reference."
+          imageSrc={base + '/posts/eudr_publication.png'}
+          tags={['EUDR', 'GeoJSON', 'Compliance', 'Due Diligence']}
+          format="PDF"
+          pageCount="~8 pages"
+        />
+
+        <!-- Right: email capture form -->
+        <div class="form-col">
+          <Heading level="h2">Get the free checklist</Heading>
+          <p class="mb-6">
+            Enter your email and I'll send the checklist straight to your inbox. You'll also
+            receive occasional updates when new resources are published — unsubscribe any time.
+          </p>
+          <BrevoForm
+            title="Send me the checklist"
+            subtitle="Free · No spam · Unsubscribe any time"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coming soon section -->
+  <section class="my-16 coming-soon-section py-16">
+    <div class="container text-center">
+      <Heading level="h2">More guides coming soon</Heading>
+      <p class="text-lg max-w-xl mx-auto mt-4 opacity-80">
+        Supply chain mapping methodology, satellite data sources for EUDR risk assessment,
+        and a step-by-step guide to setting up a geospatial due diligence workflow.
+      </p>
+    </div>
+  </section>
+</DefaultLayout>
+
+<style lang="scss">
+  .form-col {
+    padding: var(--space-l);
+    border: 1px solid var(--border-color-subtle);
+    border-radius: var(--radius-l);
+    background: light-dark(
+      color-mix(in srgb, var(--color-primary) 3%, white),
+      color-mix(in srgb, var(--color-primary) 5%, var(--color-neutral-950))
+    );
+  }
+
+  .coming-soon-section {
+    background: light-dark(var(--color-neutral-100), var(--color-neutral-900));
+    border-top: 1px solid var(--border-color-subtle);
+    border-bottom: 1px solid var(--border-color-subtle);
+  }
+</style>

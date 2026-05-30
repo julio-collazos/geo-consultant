@@ -1,9 +1,11 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro'
 import Hero from '@components/Hero.astro'
+import TrustBar from '@components/TrustBar.astro'
+import ServicesSection from '@components/ServicesSection.astro'
 import FeaturedProjects from '@components/FeaturedProjects.astro'
-import FeaturedPosts from '@components/FeaturedPosts.astro'
-import { Link } from 'accessible-astro-components'
+import WritingCard from '@components/WritingCard.astro'
+import { Heading, Link } from 'accessible-astro-components'
 import { Icon } from 'astro-icon/components'
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
@@ -11,35 +13,88 @@ function withBase(href: string): string {
   if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#')) return href
   return base + (href.startsWith('/') ? href : '/' + href)
 }
+
+// [USER INPUT REQUIRED] Replace href values with your real Medium article URLs.
+// Replace imageSrc and publishedAt to match each real article.
+const writingTeaser = [
+  {
+    title: 'How to measure supplier risk? a GIS approach',
+    description:
+      'Demonstrates a risk-based supplier screening workflow for deforestation and ecosystem risk. Each mill is evaluated across five environmental dimensions within a configurable sourcing radius: Tree Cover Loss, Water Stress, Protected Areas, Peat Soil and Wetland.',
+    // [USER INPUT REQUIRED] Replace with real Medium URL once published
+    href: 'https://medium.com/@julio-collazos/how-to-measure-supplier-risk-a-gis-approach-725e342118c0',
+    imageSrc: withBase('/posts/img_1.png'),
+    tags: ['Communication', 'Risk Assessment'],
+    publishedAt: 'May 2026',
+  },
+  {
+    title: 'Validating Geospatial Data for EUDR Compliance: A Technical Deep Dive',
+    description:
+      'A walkthrough of the algorithmic decisions behind automated GIS data validation — CRS detection, topology correction, and area classification at scale.',
+    href: 'https://medium.com/@jccollazosave/validating-geospatial-data-for-eudr-compliance-a-technical-deep-dive-aed634ffdc0b',
+    imageSrc: withBase('/posts/eudr-gis-auditor.png'),
+    tags: ['EUDR', 'Python', 'GIS'],
+    publishedAt: 'October 2025',
+  },
+  {
+    title: 'GeoJSON and the EU Deforestation Regulation (EUDR)',
+    description:
+      'A practical guide to GeoJSON format requirements for EUDR compliance: coordinate systems, geometry types, file size limits, and common submission errors.',
+    href: 'https://medium.com/@julio-collazos/️geojson-and-the-eudr-regulation-97d30f4c8a93',
+    imageSrc: withBase('/posts/eudr_publication.png'),
+    tags: ['EUDR', 'GeoJSON', 'Compliance'],
+    publishedAt: 'October 2024',
+  },
+  
+]
 ---
 
 <DefaultLayout
   title="Geospatial Analysis & Environmental Intelligence"
   useTitleTemplate={false}
 >
-  <!-- Hero: headline + description + primary CTAs -->
+  <!-- Hero: service-oriented headline + primary CTAs -->
   <Hero />
 
+  <!-- Trust signals: credentials strip -->
+  <TrustBar />
+
+  <!-- Services: what I offer -->
+  <ServicesSection />
+
   <!-- Featured portfolio projects -->
-  <FeaturedProjects title="Selected Projects" limit={3} />
+  <FeaturedProjects title="Selected Work" limit={3} />
 
-  <!-- Recent blog posts -->
-  <FeaturedPosts title="Recent Posts" limit={3} />
+  <!-- Writing teaser: 3 cards linking to Medium -->
+  <section class="my-16">
+    <div class="container">
+      <div class="writing-header">
+        <Heading level="h2">Writing</Heading>
+        <Link href={withBase('/writing')} animateOnHover animationType="nudge">
+          View all articles
+          <Icon aria-hidden="true" name="lucide:arrow-right" size="1.25rem" />
+        </Link>
+      </div>
+      <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 mt-8">
+        {writingTeaser.map((article) => <WritingCard {...article} />)}
+      </div>
+    </div>
+  </section>
 
-  <!-- Call to action -->
+  <!-- Call to action: book a call -->
   <section class="my-16">
     <div class="container">
       <div class="cta-block">
         <div class="cta-content">
-          <h2 class="text-4xl mb-4">Let's connect</h2>
+          <h2 class="text-4xl mb-4">Ready to align your supply chain with EUDR?</h2>
           <p class="text-xl mb-8 max-w-xl">
-            Whether you have a project in mind, a technical question, or just want to talk about
-            geospatial data — I'm happy to hear from you.
+            Let's talk through your geospatial data situation in a free 30-minute call. No pitch,
+            no obligations — just a focused conversation.
           </p>
           <div class="flex flex-col gap-3 min-[500px]:flex-row">
-            <Link href={withBase('/contact')} isButton type="primary" animateOnHover animationType="boop">
-              <Icon aria-hidden="true" name="lucide:mail" size="1.5rem" />
-              Get in touch
+            <Link href={withBase('/book')} isButton type="primary" animateOnHover animationType="boop">
+              <Icon aria-hidden="true" name="lucide:calendar" size="1.5rem" />
+              Book a Free Call
             </Link>
             <Link
               href="https://linkedin.com/in/julio-collazos"
@@ -60,10 +115,12 @@ function withBase(href: string): string {
 </DefaultLayout>
 
 <style lang="scss">
-  .about-intro {
-    strong {
-      color: var(--color-primary);
-    }
+  .writing-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-s);
   }
 
   .cta-block {
